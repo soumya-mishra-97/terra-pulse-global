@@ -1,0 +1,104 @@
+{
+  "snapshot_id": "wdi-2026-10-08",
+  "dataset_name": "World Development Indicators (population & demographic subset)",
+  "publisher": "The World Bank",
+  "source_url": "https://api.worldbank.org/v2/country/all/indicator/{code}?format=json&date=2000:2025",
+  "landing_page": "https://datacatalog.worldbank.org/search/dataset/0037712",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "release_version": "2026-10-08",
+  "indicator_last_updated": {
+    "SP.POP.TOTL": "2026-10-08",
+    "SP.POP.GROW": "2026-10-08",
+    "SP.DYN.CBRT.IN": "2026-10-08",
+    "SP.DYN.CDRT.IN": "2026-10-08",
+    "SP.DYN.TFRT.IN": "2026-10-08",
+    "SP.DYN.LE00.IN": "2026-10-08",
+    "SP.POP.0014.TO.ZS": "2026-10-08",
+    "SP.POP.1564.TO.ZS": "2026-10-08",
+    "SP.POP.65UP.TO.ZS": "2026-10-08",
+    "SP.URB.TOTL.IN.ZS": "2026-10-08",
+    "SP.RUR.TOTL.ZS": "2026-10-08",
+    "EN.POP.DNST": "2026-10-08",
+    "AG.LND.TOTL.K2": "2026-10-08",
+    "SM.POP.NETM": "2026-10-08"
+  },
+  "retrieved_at": "2026-10-21T12:30:09+00:00",
+  "year_range": [
+    2000,
+    2025
+  ],
+  "reference_date_convention": "Annual values; WDI total population is a midyear (1 July) estimate.",
+  "value_kind": "estimate",
+  "uncertainty": "Not quantified by the source (WDI publishes point estimates without intervals).",
+  "geographic_coverage": "World Bank economies plus regional/income aggregates (is_aggregate=true).",
+  "methodology_notes": "Total population counts all residents regardless of legal status or citizenship, as midyear estimates derived mainly from the UN World Population Prospects, national statistical offices and Eurostat. Values between censuses are modelled estimates, not live counts.",
+  "indicators": {
+    "SP.POP.TOTL": {
+      "metric": "population_total",
+      "unit": "persons"
+    },
+    "SP.POP.GROW": {
+      "metric": "population_growth_pct",
+      "unit": "% per year"
+    },
+    "SP.DYN.CBRT.IN": {
+      "metric": "birth_rate_per_1000",
+      "unit": "births per 1,000 people"
+    },
+    "SP.DYN.CDRT.IN": {
+      "metric": "death_rate_per_1000",
+      "unit": "deaths per 1,000 people"
+    },
+    "SP.DYN.TFRT.IN": {
+      "metric": "fertility_rate",
+      "unit": "births per woman"
+    },
+    "SP.DYN.LE00.IN": {
+      "metric": "life_expectancy_years",
+      "unit": "years"
+    },
+    "SP.POP.0014.TO.ZS": {
+      "metric": "age_0_14_pct",
+      "unit": "% of total population"
+    },
+    "SP.POP.1564.TO.ZS": {
+      "metric": "age_15_64_pct",
+      "unit": "% of total population"
+    },
+    "SP.POP.65UP.TO.ZS": {
+      "metric": "age_65_plus_pct",
+      "unit": "% of total population"
+    },
+    "SP.URB.TOTL.IN.ZS": {
+      "metric": "urban_pct",
+      "unit": "% of total population"
+    },
+    "SP.RUR.TOTL.ZS": {
+      "metric": "rural_pct",
+      "unit": "% of total population"
+    },
+    "EN.POP.DNST": {
+      "metric": "density_per_km2",
+      "unit": "people per sq. km of land area"
+    },
+    "AG.LND.TOTL.K2": {
+      "metric": "land_area_km2",
+      "unit": "sq. km"
+    },
+    "SM.POP.NETM": {
+      "metric": "net_migration",
+      "unit": "persons (net, annual)"
+    }
+  },
+  "files": {
+    "countries.json": {
+      "sha256": "cad5e40a6615d2f80347ab7b99c1f645d97bf661beff6dde0d5da8c9646b6420",
+      "bytes": 76161
+    },
+    "indicators.csv": {
+      "sha256": "74dad8c2767335cd5f2d83da34c9bea63436aaa9a9144133fb197a76f92ecd7c",
+      "bytes": 6734967
+    }
+  }
+}

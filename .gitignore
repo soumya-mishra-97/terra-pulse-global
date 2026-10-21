@@ -1,0 +1,17 @@
+# secrets
+.env
+.env.*
+!.env.example
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+backend/var/
+*.egg-info/
+# node
+node_modules/
+frontend/dist/
+# os
+.DS_Store
