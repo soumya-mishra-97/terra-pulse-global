@@ -5,6 +5,9 @@
 TerraPulse Global AI is a demographic intelligence platform that explores global and country-level population trends using dated population datasets, deterministic calculations, retrieval-augmented generation (RAG), and a LangGraph-orchestrated agent workflow. When configured, Anthropic Claude generates evidence-grounded explanations; it does not calculate or override authoritative population figures.
 
 > **Data integrity:** TerraPulse does not count every person on Earth in real time. Population values are source estimates tied to reference dates, or deterministic calculations derived from those estimates. The animated counter is an illustrative projection with its assumptions disclosed.
+> **Screenshot:**
+<img width="380" height="700" alt="tera-pulse" src="https://github.com/user-attachments/assets/2cac642f-f3bc-4bfa-a46d-deb93caebf35" />
+
 
 ## Contents
 
