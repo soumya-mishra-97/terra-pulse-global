@@ -113,9 +113,12 @@ class PopulationService:
         pops = self.repo.latest_values(src.id, "population_total")
         growth = self.repo.latest_values(src.id, "population_growth_pct")
         world = self.repo.estimate(src.id, WORLD)
+        needle = q.lower() if q else None
         items = []
         for c in self.repo.list_countries():
-            if q and q.lower() not in c.name.lower() and q.upper() != c.iso3:
+            # Matches the country name, its capital city, or its ISO3 code.
+            if needle and not (needle in c.name.lower() or needle in (c.capital or "").lower()
+                               or needle.upper() == c.iso3):
                 continue
             if region and region not in (c.region_code, c.region):
                 continue
@@ -124,7 +127,7 @@ class PopulationService:
             share = calc.share_percent(pv, world.value) if pv and world and py == world.reference_date.year else None
             items.append(CountryListItem(
                 iso3=c.iso3, iso2=c.iso2, name=c.name, region=c.region, region_code=c.region_code,
-                income_level=c.income_level, population=pv, population_year=py, growth_percent=gv, growth_year=gy,
+                income_level=c.income_level, capital=c.capital, population=pv, population_year=py, growth_percent=gv, growth_year=gy,
                 share_of_world_percent=share,
             ))
         attr = {"name": "name", "population": "population", "growth": "growth_percent",

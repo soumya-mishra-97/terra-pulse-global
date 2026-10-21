@@ -1,0 +1,14 @@
+{
+  "snapshot_id": "geonames-2026-10-21",
+  "dataset_name": "GeoNames cities5000 (populated places > 5,000 inhabitants)",
+  "publisher": "GeoNames",
+  "source_url": "https://download.geonames.org/export/dump/cities5000.zip",
+  "landing_page": "https://www.geonames.org",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "retrieved_at": "2026-10-21T19:53:15+00:00",
+  "row_count": 69834,
+  "value_kind": "estimate",
+  "reference_date_convention": "Not specified by the source: each figure is the latest value GeoNames holds for the place (often a census or official estimate); `modified` is the date the record was last edited, not the population reference date.",
+  "checksum_sha256": "e079638b36f7853d970dfa1c960216397d560654b9579bfc65e37af0c252bc13"
+}

@@ -82,6 +82,7 @@ class CountryListItem(BaseModel):
     region: str | None
     region_code: str | None
     income_level: str | None
+    capital: str | None
     population: float | None
     population_year: int | None
     growth_percent: float | None
@@ -95,6 +96,35 @@ class CountryPage(BaseModel):
     limit: int
     offset: int
     provenance: Provenance
+
+
+class CitySource(BaseModel):
+    snapshot_id: str
+    dataset_name: str
+    publisher: str
+    source_url: str
+    landing_page: str | None
+    license: str
+    retrieved_at: datetime
+    value_kind: str
+    reference_date_convention: str
+
+
+class CityOut(BaseModel):
+    geonameid: int
+    name: str
+    admin1: str | None
+    country_iso2: str
+    country_iso3: str | None
+    country_name: str | None
+    population: int
+    record_modified: date = Field(description="When the source last edited the record, not the population reference date")
+
+
+class CityPage(BaseModel):
+    items: list[CityOut]
+    total: int
+    source: CitySource
 
 
 class ChangeOut(BaseModel):

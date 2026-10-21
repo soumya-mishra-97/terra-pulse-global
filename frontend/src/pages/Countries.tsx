@@ -4,7 +4,7 @@ import { api, ApiError } from "../api/client";
 import { SpecChart } from "../components/charts";
 import { ProvenanceBanner } from "../components/ProvenanceBanner";
 import { EmptyState, ErrorState, NoDataset, Skeleton } from "../components/States";
-import { flagEmoji, fmtPct, fmtPeople } from "../lib/format";
+import { flagEmoji, fmtExact, fmtPct, fmtPeople } from "../lib/format";
 import { useAsync } from "../lib/useAsync";
 
 const METRICS: [string, string][] = [
@@ -22,9 +22,13 @@ export function Countries({ search }: { search: string }) {
   const [metric, setMetric] = useState("population_total");
   const list = useAsync(() => api.countries({ q: search, sort, order, region, limit: 300 }), [search, sort, order, region]);
   const regions = useAsync(() => api.regions());
+  const query = search.trim();
+  const cities = useAsync(() => (query.length >= 2 ? api.cities(query) : Promise.resolve(null)), [query]);
   const history = useAsync(() => (selected ? api.history(selected, metric) : Promise.resolve(null)), [selected, metric]);
-  useEffect(() => { if (!selected && list.data?.items[0]) setParams({ c: list.data.items[0].iso3 }, { replace: true }); },
-    [list.data, selected, setParams]);
+  useEffect(() => {
+    const first = list.data?.items[0]?.iso3 ?? cities.data?.items.find((c) => c.country_iso3)?.country_iso3;
+    if (!selected && first) setParams({ c: first }, { replace: true });
+  }, [list.data, cities.data, selected, setParams]);
   const current = useMemo(() => list.data?.items.find((i) => i.iso3 === selected), [list.data, selected]);
 
   function toggleSort(key: string) {
@@ -37,6 +41,30 @@ export function Countries({ search }: { search: string }) {
   return (
     <>
       {list.data && <ProvenanceBanner p={list.data.provenance} />}
+      {cities.data && cities.data.items.length > 0 && (
+        <section className="card" aria-labelledby="cities-title">
+          <div className="card-head">
+            <div><h3 className="card-title" id="cities-title">Cities</h3>
+              <div className="card-sub">{cities.data.total} matching “{query}” · {cities.data.source.publisher} ({cities.data.source.license}) · population year not specified by the source</div></div>
+          </div>
+          <div className="table-scroll">
+            <table className="data">
+              <thead><tr><th>City</th><th>Country</th><th className="num">Population</th></tr></thead>
+              <tbody>
+                {cities.data.items.map((c) => (
+                  <tr key={c.geonameid} className={c.country_iso3 ? "clickable" : undefined} tabIndex={c.country_iso3 ? 0 : undefined}
+                    onClick={() => c.country_iso3 && setParams({ c: c.country_iso3 })}
+                    onKeyDown={(e) => e.key === "Enter" && c.country_iso3 && setParams({ c: c.country_iso3 })}>
+                    <td>{c.name}{c.admin1 && <div className="note">{c.admin1}</div>}</td>
+                    <td><span aria-hidden="true">{flagEmoji(c.country_iso2)}</span> {c.country_name ?? c.country_iso2}</td>
+                    <td className="num">{fmtExact(c.population)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
       <div className="grid two">
         <section className="card" aria-labelledby="clist">
           <div className="card-head">
@@ -62,7 +90,8 @@ export function Countries({ search }: { search: string }) {
                       <tr key={c.iso3} className="clickable" aria-selected={c.iso3 === selected}
                         onClick={() => setParams({ c: c.iso3 })} tabIndex={0}
                         onKeyDown={(e) => e.key === "Enter" && setParams({ c: c.iso3 })}>
-                        <td><span aria-hidden="true">{flagEmoji(c.iso2)}</span> {c.name}</td>
+                        <td><span aria-hidden="true">{flagEmoji(c.iso2)}</span> {c.name}
+                          {search && c.capital?.toLowerCase().includes(search.toLowerCase()) && <div className="note">Capital: {c.capital}</div>}</td>
                         <td className="num">{fmtPeople(c.population)}</td>
                         <td className={`num ${c.growth_percent !== null && c.growth_percent < 0 ? "neg" : "pos"}`}>{fmtPct(c.growth_percent, 2, true)}</td>
                         <td className="num">{fmtPct(c.share_of_world_percent, 2)}</td>
@@ -77,7 +106,7 @@ export function Countries({ search }: { search: string }) {
           <div className="card-head">
             <div>
               <h3 className="card-title" id="cdetail">
-                {current ? <><span aria-hidden="true">{flagEmoji(current.iso2)}</span> {current.name}</> : "Country detail"}
+                {current ? <><span aria-hidden="true">{flagEmoji(current.iso2)}</span> {current.name}</> : history.data?.name ?? "Country detail"}
               </h3>
               <div className="card-sub">{current ? `${current.region ?? ""} · ${current.income_level ?? ""}` : ""}</div>
             </div>

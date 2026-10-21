@@ -112,6 +112,27 @@ def make_snapshot(root: Path, snapshot_id: str = "synthetic-2026-01-01", rows: l
     return d
 
 
+def make_cities(d: Path) -> Path:
+    """Synthetic GeoNames-style city snapshot, stored largest population first like the real one."""
+    snap = d / "geonames-2026-01-01"
+    snap.mkdir(parents=True)
+    rows = [["1", "Mumbai", "", "IN", "Maharashtra", "12691836", "2026-01-01"],
+            ["2", "São Paulo", "Sao Paulo", "BR", "São Paulo", "12400232", "2026-01-01"],
+            ["3", "Punemara", "", "IN", "Synthetic", "900000", "2026-01-01"],
+            ["4", "Pune", "", "IN", "Maharashtra", "300000", "2026-01-01"]]
+    with (snap / "cities.csv").open("w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["geonameid", "name", "asciiname", "country_iso2", "admin1", "population", "modified"])
+        w.writerows(rows)
+    (snap / "manifest.json").write_text(json.dumps({
+        "snapshot_id": snap.name, "dataset_name": "Synthetic cities", "publisher": "TerraPulse tests",
+        "source_url": "https://example.invalid/cities", "landing_page": None, "license": "CC0 (synthetic)",
+        "retrieved_at": "2026-01-01T00:00:00+00:00", "value_kind": "estimate",
+        "reference_date_convention": "Not specified (synthetic).",
+    }), encoding="utf-8")
+    return d
+
+
 class FakeLLM:
     """Scriptable stand-in for Claude. Each call pops the next response (str) or raises it (Exception)."""
 
@@ -135,7 +156,7 @@ def settings(tmp_path: Path) -> Settings:
     return Settings(
         _env_file=None, app_env="test", database_url=f"sqlite:///{tmp_path / 'test.db'}", anthropic_api_key=None,
         storage_dir=tmp_path / "reports", report_execution="inline", methodology_dir=BACKEND_DIR / "data" / "methodology",
-        log_level="WARNING", max_active_reports_per_user=5,
+        log_level="WARNING", max_active_reports_per_user=5, city_dir=make_cities(tmp_path / "cities"),
     )
 
 

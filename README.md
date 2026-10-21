@@ -50,7 +50,7 @@ The top bar holds the breadcrumb, API status, light/dark theme toggle and user i
 | Page | What it shows |
 |---|---|
 | **Overview** | Provenance banner, KPI tiles, illustrative counter, urban vs rural, age structure by region, world population trend, world map, regional indicators, and most populous / fastest growing tables |
-| **Countries** | Searchable, sortable country table with indicator history, derived change and CAGR |
+| **Countries** | Country table searchable by country name, capital city or ISO3 code, with sorting, indicator history, derived change and CAGR; matching cities (e.g. Pune) appear with their population above the table |
 | **Country Reports** | Report form, report history, and a sectioned preview with PDF and Markdown download |
 | **AI Docs** | Live LangGraph workflow, agent responsibilities, deterministic tools, RAG corpus, and the project documentation viewer with Swagger UI, ReDoc and OpenAPI links |
 | **Project Structure** | The documentation viewer opened on the annotated repository tree, routes and documentation/API URLs |
@@ -242,8 +242,9 @@ Unavailable indicators are labelled **Data unavailable** rather than invented. F
 | Value type | Source estimates and deterministic derived values; illustrative counter clearly labelled |
 | Uncertainty | Not quantified unless the source provides it; no invented confidence intervals |
 | Projections | Unavailable until an official projection dataset is imported |
+| City populations | GeoNames `cities5000` (places > 5,000 inhabitants), CC BY 4.0, in `backend/data/cities/<snapshot_id>/`, retrieved with `backend/scripts/fetch_geonames_cities.py`; the source does not state a reference year per city (often the latest census) |
 
-Population estimates are tied to their reference dates; WDI population values are midyear estimates. Freshness is evaluated against a configurable threshold. The import pipeline validates checksums and required metadata, rejects invalid rows, audits skipped rows when requested, checks coverage, and imports a new baseline transactionally.
+Population estimates are tied to their reference dates; WDI population values are midyear estimates. The latest year is 2025 because WDI publishes a year's midyear estimate only after that year: the World Bank API returns no 2026 values yet. The illustrative counter is the only figure projected to today, and it is labelled as such. Freshness is evaluated against a configurable threshold. The import pipeline validates checksums and required metadata, rejects invalid rows, audits skipped rows when requested, checks coverage, and imports a new baseline transactionally.
 
 ## Getting Started
 
@@ -328,6 +329,7 @@ API errors use a consistent envelope with status, title, detail, and request ID.
 | `GET /api/v1/population/countries` | Searchable and pageable country list |
 | `GET /api/v1/population/countries/{iso3}/history` | Historical series for a country and metric |
 | `GET /api/v1/population/regions` | Regional aggregates |
+| `GET /api/v1/population/cities?q=` | City population search (GeoNames), linked to the World Bank country |
 | `GET /api/v1/population/sources` | Imported dataset versions |
 | `POST /api/v1/copilot/chat` | Execute the multi-agent Copilot workflow |
 | `GET /api/v1/copilot/architecture` | Agent graph, tools, and knowledge-base metadata |

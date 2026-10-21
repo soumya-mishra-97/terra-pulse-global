@@ -39,6 +39,7 @@ class Settings(BaseSettings):
     stale_after_days: int = Field(default=730, description="Reference date older than this => stale")
     snapshot_dir: Path = BACKEND_DIR / "data" / "snapshots"
     methodology_dir: Path = BACKEND_DIR / "data" / "methodology"
+    city_dir: Path = BACKEND_DIR / "data" / "cities"
 
     # --- Reports ---
     storage_backend: Literal["local", "s3"] = "local"

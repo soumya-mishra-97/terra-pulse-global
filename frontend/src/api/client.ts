@@ -1,6 +1,6 @@
 // Thin fetch wrapper. The browser never holds LLM credentials: every AI call goes through /api.
 import type {
-  Architecture, ChatResponse, CountryPage, Health, HistoryResponse, RegionsResponse, ReportCountry, ReportDetail,
+  Architecture, ChatResponse, CityPage, CountryPage, Health, HistoryResponse, RegionsResponse, ReportCountry, ReportDetail,
   ReportOptions, ReportPage, ReportSummary, WorldSummary,
 } from "./types";
 
@@ -64,6 +64,7 @@ export const api = {
   history: (iso3: string, metric = "population_total", start?: number) =>
     request<HistoryResponse>(`/api/v1/population/countries/${encodeURIComponent(iso3)}/history?metric=${metric}${start ? `&start=${start}` : ""}`),
   regions: () => request<RegionsResponse>("/api/v1/population/regions"),
+  cities: (q: string) => request<CityPage>(`/api/v1/population/cities?q=${encodeURIComponent(q)}`),
   chat: (question: string, signal?: AbortSignal) =>
     request<ChatResponse>("/api/v1/copilot/chat", { method: "POST", body: JSON.stringify({ question }), signal }, 120000),
   architecture: () => request<Architecture>("/api/v1/copilot/architecture"),

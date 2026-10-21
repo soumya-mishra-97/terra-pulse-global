@@ -30,8 +30,9 @@ terrapulse-global-ai/
 │   │   └── integrations/        # Claude client and file-storage adapters
 │   ├── migrations/              # Alembic migrations
 │   ├── data/snapshots/          # Dated WDI snapshot and manifest
+│   ├── data/cities/             # Dated GeoNames city population snapshot and manifest
 │   ├── data/methodology/        # Approved RAG source documents
-│   ├── scripts/                 # World Bank snapshot retrieval
+│   ├── scripts/                 # World Bank and GeoNames snapshot retrieval
 │   ├── evals/                   # Evaluation cases and runner
 │   └── tests/                   # Unit and integration tests
 ├── frontend/

@@ -8,7 +8,8 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_container, get_session
 from app.repositories.population import PopulationRepository
-from app.schemas.population import CountryPage, HistoryResponse, RegionsResponse, SourceOut, WorldSummary
+from app.schemas.population import CityPage, CountryPage, HistoryResponse, RegionsResponse, SourceOut, WorldSummary
+from app.services.cities import search_cities
 from app.services.population import METRICS, PopulationService
 
 router = APIRouter(prefix="/api/v1", tags=["population"])
@@ -52,6 +53,16 @@ def countries(
     svc: PopulationService = Depends(population_service),
 ) -> CountryPage:
     return svc.countries(q=q, region=region, sort=sort, order=order, limit=limit, offset=offset)
+
+
+@router.get("/population/cities", response_model=CityPage)
+def cities(
+    q: str = Query(min_length=2, max_length=80),
+    limit: int = Query(default=10, ge=1, le=50),
+    session: Session = Depends(get_session),
+    container=Depends(get_container),
+) -> CityPage:
+    return search_cities(container.cities, PopulationRepository(session), q, limit)
 
 
 @router.get("/population/countries/{iso3}/history", response_model=HistoryResponse)

@@ -33,8 +33,27 @@ def test_countries_sort_filter_and_paginate(client):
     assert [i["iso3"] for i in body["items"]] == ["IND", "PAK"] and body["total"] == 4
     body = client.get("/api/v1/population/countries", params={"q": "lanka"}).json()
     assert [i["iso3"] for i in body["items"]] == ["LKA"]
+    body = client.get("/api/v1/population/countries", params={"q": "delhi"}).json()
+    assert [(i["iso3"], i["capital"]) for i in body["items"]] == [("IND", "New Delhi")]
     body = client.get("/api/v1/population/countries", params={"sort": "name", "order": "asc", "offset": 3}).json()
     assert [i["name"] for i in body["items"]] == ["Sri Lanka"]
+
+
+def test_cities_rank_exact_then_prefix_and_link_country(client):
+    body = client.get("/api/v1/population/cities", params={"q": "pune"}).json()
+    assert [(i["name"], i["population"]) for i in body["items"]] == [("Pune", 300000), ("Punemara", 900000)]
+    assert body["items"][0]["country_iso3"] == "IND" and body["items"][0]["admin1"] == "Maharashtra"
+    assert body["total"] == 2 and body["source"]["publisher"] == "TerraPulse tests"
+    sao = client.get("/api/v1/population/cities", params={"q": "sao paulo"}).json()["items"]
+    assert [(i["name"], i["country_iso3"]) for i in sao] == [("São Paulo", None)]  # BR not in the test countries
+    assert client.get("/api/v1/population/cities", params={"q": "p"}).status_code == 422
+
+
+def test_cities_unavailable_without_snapshot(client_factory, settings, tmp_path):
+    settings.city_dir = tmp_path / "no-cities"
+    with client_factory() as c:
+        r = c.get("/api/v1/population/cities", params={"q": "pune"})
+    assert r.status_code == 503 and "fetch_geonames_cities" in r.json()["error"]["detail"]
 
 
 def test_countries_rejects_invalid_params(client):

@@ -25,6 +25,7 @@ from app.integrations.llm import LLMClient, build_llm
 from app.integrations.storage import build_storage
 from app.knowledge.retriever import BM25Retriever, Retriever
 from app.observability import configure_logging, correlation_id_var, metrics, new_correlation_id
+from app.services.cities import CityIndex
 from app.services.reports import ReportLimitError, ReportNotReadyError, ReportService
 
 VERSION = "0.1.0"
@@ -40,6 +41,7 @@ class Container:
     llm: LLMClient | None
     reports: ReportService
     rate_limiter: RateLimiter
+    cities: CityIndex | None = None
     version: str = VERSION
 
 
@@ -51,7 +53,7 @@ def build_container(settings: Settings, session_factory: sessionmaker[Session] |
     llm = llm if llm is not None else (build_llm(settings) if use_llm_from_settings else None)
     reports = ReportService(factory, settings, retriever, llm, build_storage(settings))
     return Container(settings=settings, session_factory=factory, retriever=retriever, llm=llm, reports=reports,
-                     rate_limiter=RateLimiter())
+                     rate_limiter=RateLimiter(), cities=CityIndex.from_directory(settings.city_dir))
 
 
 def create_app(container: Container | None = None) -> FastAPI:

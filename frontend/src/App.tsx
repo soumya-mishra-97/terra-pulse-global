@@ -65,8 +65,8 @@ export default function App() {
           <span style={{ flex: 1 }} />
           <label className="search">
             <Icon name="search" size={16} />
-            <span className="sr-only">Search countries</span>
-            <input placeholder="Search countries" value={search}
+            <span className="sr-only">Search countries or cities</span>
+            <input placeholder="Search countries or cities" value={search}
               onChange={(e) => { setSearch(e.target.value); if (location.pathname !== "/countries") navigate("/countries"); }} />
           </label>
         </div>

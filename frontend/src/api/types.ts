@@ -40,10 +40,19 @@ export interface WorldSummary {
 
 export interface CountryListItem {
   iso3: string; iso2: string | null; name: string; region: string | null; region_code: string | null; income_level: string | null;
-  population: number | null; population_year: number | null; growth_percent: number | null; growth_year: number | null;
+  capital: string | null; population: number | null; population_year: number | null; growth_percent: number | null; growth_year: number | null;
   share_of_world_percent: number | null;
 }
 export interface CountryPage { items: CountryListItem[]; total: number; limit: number; offset: number; provenance: Provenance }
+
+export interface CityItem {
+  geonameid: number; name: string; admin1: string | null; country_iso2: string; country_iso3: string | null;
+  country_name: string | null; population: number; record_modified: string;
+}
+export interface CityPage {
+  items: CityItem[]; total: number;
+  source: { dataset_name: string; publisher: string; license: string; retrieved_at: string; reference_date_convention: string };
+}
 
 export interface HistoryResponse {
   iso3: string; name: string; metric: string; unit: string; value_kind: string;
